@@ -1,14 +1,3 @@
-"""
-fipe_marca_sync.py
-==================
-Compara marcas de veículos de um arquivo SQL da FIPE com uma base CSV existente
-e gera um CSV com apenas as marcas novas, com IDs sequenciais.
-
-Uso:
-    python fipe_marca_sync.py
-    python fipe_marca_sync.py --base veiculo_marca.csv --sql fipe.sql --saida novas_marcas.csv
-"""
-
 import argparse
 import os
 import re
@@ -30,18 +19,8 @@ _SQL_PATTERN = re.compile(
 )
 
 
-
-
 def extrair_marcas_sql(caminho_sql: str) -> dict[str, dict]:
-    """
-    Lê o arquivo SQL e retorna um dicionário indexado pelo nome em minúsculas.
-
-    Retorno:
-        {
-            "honda": {"original": "Honda", "tipo": "motos"},
-            ...
-        }
-    """
+ 
     marcas: dict[str, dict] = {}
 
     print(f"[1/3] Lendo SQL: {caminho_sql}")
@@ -58,9 +37,7 @@ def extrair_marcas_sql(caminho_sql: str) -> dict[str, dict]:
 
 
 def carregar_base_existente(caminho_csv: str) -> tuple[set[str], int]:
-    """
-    Lê o CSV base e devolve (conjunto de nomes em minúsculas, maior ID atual).
-    """
+   
     print(f"[2/3] Lendo base existente: {caminho_csv}")
     df = pd.read_csv(caminho_csv, sep=None, engine="python", encoding="latin1")
 
@@ -76,9 +53,7 @@ def gerar_novas_marcas(
     nomes_existentes: set[str],
     maior_id: int,
 ) -> pd.DataFrame:
-    """
-    Filtra marcas ainda não cadastradas e atribui IDs sequenciais.
-    """
+   
     novas = [
         {
             "name": dados["original"],
@@ -115,7 +90,6 @@ def processar(base_csv: str, novo_sql: str, saida_csv: str) -> None:
 
     df_novas.to_csv(saida_csv, index=False, sep=";", encoding="utf-8-sig")
     print(f"\n✔  {len(df_novas)} novas marcas salvas em: {saida_csv}")
-
 
 
 def _parse_args() -> argparse.Namespace:
